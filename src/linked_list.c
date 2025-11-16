@@ -1,15 +1,10 @@
 #include "linked_list.h"
 #include <assert.h>
-//#include <debugmalloc.h>
 
-LinkedList* linked_list_new(void) {
-	LinkedList* list = (LinkedList*)malloc(sizeof(LinkedList));
-	if (!list) return NULL;
-
-	list->head = NULL;
-	list->tail = NULL;
-	list->count = 0;
-	return list;
+void linked_list_new(LinkedList* this) {
+	this->head = NULL;
+	this->tail = NULL;
+	this->count = 0;
 }
 
 void linked_list_delete(LinkedList* this) {
@@ -19,7 +14,6 @@ void linked_list_delete(LinkedList* this) {
 		free(iter);
 		iter = next;
 	}
-	free(this);
 }
 
 void linked_list_push_back(LinkedList* this, void* value) {

@@ -30,10 +30,12 @@ A simple C application for graphing geometric shapes using ImGui. Made for a uni
 - [Premake5](https://premake.github.io/) for generating build files
 - A C compiler
 - A C++ compiler (for building dependencies)
+- OpenGL development libraries
 - [GLFW](https://www.glfw.org/) (included as a submodule)
 - [cimgui](https://github.com/cimgui/cimgui) (included as a submodule)
 - [cimplot](https://github.com/cimplot/cimplot) (included as a submodule)
-- OpenGL development libraries
+- [stb](https://github.com/nothings/stb) (included as a submodule)
+- [nativefiledialog](https://github.com/mlabbe/nativefiledialog) (included as a submodule)
 
 ### Instructions
 1. Clone the repository

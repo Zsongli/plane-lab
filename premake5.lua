@@ -49,6 +49,9 @@ project "PlaneLab"
 
    defines { "CIMGUI_USE_GLFW", "CIMGUI_USE_OPENGL3", "CIMGUI_DEFINE_ENUMS_AND_STRUCTS", "APP_NAME=\"%{wks.name}\"" }
 
+   filter {"system:windows", "action:vs*" }
+      files { "resources/**", "src/resources/win32/**.rc", "src/resources/win32/**.h" }
+
    filter "system:windows"
       links { "opengl32" }
 

@@ -12,7 +12,7 @@ typedef struct {
 	size_t count;
 } LinkedList;
 
-LinkedList* linked_list_new(void);
+void linked_list_new(LinkedList* this);
 void linked_list_delete(LinkedList* this);
 void linked_list_push_back(LinkedList* this, void* value);
 void linked_list_remove_at(LinkedList* this, size_t index);
