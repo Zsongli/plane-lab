@@ -23,8 +23,7 @@ void line_plot(void* _this, bool is_selected) {
 
 	ImPlot_SetNextLineStyle(this->base.color, 2.0f);
 
-	ImPlotRect limits;
-	ImPlot_GetPlotLimits(&limits, -1, -1);
+	ImPlotRect limits = ImPlot_GetPlotLimits(-1, -1);
 
 	double xs[2] = { limits.X.Min, limits.X.Max };
 	double ys[2] = { line(this, xs[0]), line(this, xs[1]) };

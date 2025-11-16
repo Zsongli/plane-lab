@@ -106,8 +106,7 @@ void _free_resources(MainWindow* this) {
 void _draw_about_popup(MainWindow* this) {
 	if (igBeginPopupModal("About", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
 
-		ImVec2 rgn_avail;
-		igGetContentRegionAvail(&rgn_avail);
+		ImVec2 rgn_avail = igGetContentRegionAvail();
 
 		ImTextureRef about_tex;
 		texture_to_imtextureref(&this->about_tex, &about_tex);
@@ -123,9 +122,8 @@ void _draw_about_popup(MainWindow* this) {
 		igText("Build: %s - %s", build_config, __TIMESTAMP__);
 		igTextLinkOpenURL("Source code", ""); // TODO
 
-		ImVec2 text_size;
-		igCalcTextSize(&text_size, "Close", NULL, false, 0.0f);
-		igGetContentRegionAvail(&rgn_avail);
+		ImVec2 text_size = igCalcTextSize("Close", NULL, false, 0.0f);
+		rgn_avail = igGetContentRegionAvail();
 
 		igSetCursorPos((ImVec2) { igGetCursorPosX() + (rgn_avail.x - text_size.x) * 0.5f, igGetCursorPosY() + 10 });
 		if (igButton("Close", (ImVec2) { 0.0f, 0.0f })) {
@@ -150,7 +148,13 @@ void _draw_menu_bar(MainWindow* this) {
 		igEndMenu();
 	}
 	if (igBeginMenu("Edit", true)) {
-		if (igMenuItem_Bool("Deselect", "Esc", NULL, true)) {
+		if (igMenuItem_Bool("Deselect", "Esc", NULL, this->selected_shape_index != -1)) {
+			this->selected_shape_index = -1;
+		}
+		if (igMenuItem_Bool("Delete selected", "Del", NULL, this->selected_shape_index != -1)) {
+			Shape* selected_shape = linked_list_value_at(&this->shapes, this->selected_shape_index);
+			selected_shape->vtable->delete(selected_shape);
+			linked_list_remove_at(&this->shapes, this->selected_shape_index);
 			this->selected_shape_index = -1;
 		}
 		igEndMenu();
@@ -192,8 +196,7 @@ ImGuiID _draw_shell(MainWindow* this) { // this function is based on ImGui::Dock
 
 	_draw_menu_bar(this);
 
-	ImVec2 cursor_pos_before_dockspace;
-	igGetCursorPos(&cursor_pos_before_dockspace);
+	ImVec2 cursor_pos_before_dockspace = igGetCursorPos();
 	ImGuiID dockspace_id = igDockSpace(igGetID_Str("DockSpace"), (ImVec2) { 0.0f, 0.0f }, ImGuiDockNodeFlags_None, NULL);
 	igSetCursorPos(cursor_pos_before_dockspace);
 
@@ -250,10 +253,8 @@ void _draw_properties_window(MainWindow* this) {
 void _draw_selector_window(MainWindow* this) {
 	igBegin("Selector", NULL, ImGuiWindowFlags_None);
 
-	ImVec2 rgn_avail;
-	igGetContentRegionAvail(&rgn_avail);
-	ImVec2 add_button_size;
-	igCalcTextSize(&add_button_size, "Add new", NULL, false, 0.0f);
+	ImVec2 rgn_avail = igGetContentRegionAvail();
+	ImVec2 add_button_size = igCalcTextSize("Add new", NULL, false, 0.0f);
 	add_button_size.y += this->base.imgui_context->Style.FramePadding.x * 3.0f;
 
 	if (igBeginListBox("##ShapeList", (ImVec2) { -igGET_FLT_MIN(), rgn_avail.y - add_button_size.y })) {
