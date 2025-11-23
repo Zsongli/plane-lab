@@ -1,8 +1,7 @@
 #include "texture.h"
-#include <gl/GL.h>
 #include <stb_image.h>
 
-bool texture_new_from_png_data(Texture* this, const unsigned char* png_data, size_t png_size) {
+bool texture_new_from_encoded(Texture* this, const unsigned char* png_data, size_t png_size) {
 	unsigned char* pixels = stbi_load_from_memory(
 		png_data,
 		png_size,
@@ -16,7 +15,11 @@ bool texture_new_from_png_data(Texture* this, const unsigned char* png_data, siz
 	glGenTextures(1, &this->id);
 	glBindTexture(GL_TEXTURE_2D, this->id);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, pixels);
-	if (glGetError() != GL_NO_ERROR) {
+
+	bool error = false;
+	while (glGetError() != GL_NO_ERROR) error = true;
+
+	if (error) {
 		glDeleteTextures(1, &this->id);
 		glBindTexture(GL_TEXTURE_2D, 0);
 		stbi_image_free(pixels);
@@ -36,7 +39,9 @@ void texture_delete(Texture* this) {
 	glDeleteTextures(1, &this->id);
 }
 
-void texture_to_imtextureref(const Texture* texture, ImTextureRef* out_imtextureref) {
-	out_imtextureref->_TexData = NULL;
-	out_imtextureref->_TexID = texture->id;
+ImTextureRef texture_to_imtextureref(const Texture* texture) {
+	return (ImTextureRef) {
+		._TexData = NULL,
+			._TexID = texture->id
+	};
 }

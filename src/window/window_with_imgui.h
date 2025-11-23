@@ -18,8 +18,8 @@ typedef struct {
 } WindowWithImGui;
 
 bool window_with_imgui_new(WindowWithImGui* this, int width, int height, const char* title);
-void window_with_imgui_delete(WindowWithImGui* this);
+void window_with_imgui_delete(void* this);
 
-void window_with_imgui_on_draw(void* _this);
+void window_with_imgui_on_draw(void* this);
 
-void window_with_imgui_on_imgui_draw(void* _this);
+void window_with_imgui_on_imgui_draw(void* this);

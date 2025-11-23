@@ -12,7 +12,7 @@ function embed_resources(input_dir, output_dir)
     index_out:write("#define RESOURCE_DATA(index) (_resource_data[index])\n")
     index_out:write("#define RESOURCE_SIZE(index) (_resource_sizes[index])\n\n")
     
-    local resource_data_array = "static const unsigned char* _resource_data[] = {\n"
+    local resource_data_array = "static const void* _resource_data[] = {\n"
     local resource_size_array = "static const size_t _resource_sizes[] = {\n"
 
     local files = os.matchfiles(input_dir .. "/*")

@@ -1,6 +1,6 @@
 #include "window_with_imgui.h"
 #include <stdlib.h>
-#include "utils.h"
+#include "../utils.h"
 #include <cimgui_impl.h>
 
 void window_with_imgui_on_draw(void* _this) {
@@ -34,9 +34,27 @@ void window_with_imgui_on_imgui_draw(void* _this) {
 	DISCARD(_this);
 }
 
+void window_with_imgui_delete(void* _this) {
+	WindowWithImGui* this = _this;
+
+	igSetCurrentContext(this->imgui_context);
+	ImPlot_SetCurrentContext(this->implot_context);
+	glfwMakeContextCurrent(this->base.glfw_window);
+
+	ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplGlfw_Shutdown();
+
+	ImPlot_DestroyContext(this->implot_context);
+	igDestroyContext(this->imgui_context);
+
+	window_delete(&this->base);
+}
+
+
 WindowWithImGuiVTable window_with_imgui_default_vtable = {
 	.base = {
 		.on_draw = window_with_imgui_on_draw,
+		.delete = window_with_imgui_delete,
 	},
 	.on_imgui_draw = window_with_imgui_on_imgui_draw,
 };
@@ -89,17 +107,4 @@ fail_imgui:
 	window_delete(&this->base);
 fail_window:
 	return false;
-}
-
-void window_with_imgui_delete(WindowWithImGui* this) {
-	igSetCurrentContext(this->imgui_context);
-	ImPlot_SetCurrentContext(this->implot_context);
-	glfwMakeContextCurrent(this->base.glfw_window);
-
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplGlfw_Shutdown();
-
-	ImPlot_DestroyContext(this->implot_context);
-	igDestroyContext(this->imgui_context);
-	window_delete(&this->base);
 }

@@ -1,5 +1,5 @@
 #include "window.h"
-#include "utils.h"
+#include "../utils.h"
 #include <stdlib.h>
 
 void window_on_draw(void* this) {
@@ -7,8 +7,15 @@ void window_on_draw(void* this) {
 	return;
 }
 
+void window_delete(void* _this) {
+	Window* this = _this;
+
+	glfwDestroyWindow(this->glfw_window);
+}
+
 WindowVTable window_default_vtable = {
 	.on_draw = window_on_draw,
+	.delete = window_delete
 };
 
 bool window_new(Window* this, int width, int height, const char* title) {
@@ -32,9 +39,4 @@ void window_run_main_loop(Window* this) {
 		
 		glfwSwapBuffers(this->glfw_window);
 	}
-}
-
-void window_delete(Window* this) {
-	glfwDestroyWindow(this->glfw_window);
-	this->glfw_window = NULL;
 }

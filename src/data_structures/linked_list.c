@@ -1,5 +1,6 @@
 #include "linked_list.h"
 #include <assert.h>
+#include <debugmalloc.h>
 
 void linked_list_new(LinkedList* this) {
 	this->head = NULL;
@@ -50,6 +51,17 @@ void linked_list_remove_at(LinkedList* this, size_t index) {
 	this->count--;
 }
 
+void linked_list_remove_after(LinkedList* this, LinkedListNode* node) {
+	assert(node != NULL && "give me something");
+
+	LinkedListNode* to_remove = node->next;
+	assert(to_remove != NULL && "attempted to remove element out of bounds");
+	node->next = to_remove->next;
+	if (this->tail == to_remove) this->tail = node;
+	free(to_remove);
+	this->count--;
+}
+
 LinkedListNode* linked_list_at(LinkedList* this, size_t index) {
 	LinkedListNode* iter = this->head;
 	for (size_t i = 0; i < index; i++) {
@@ -59,7 +71,6 @@ LinkedListNode* linked_list_at(LinkedList* this, size_t index) {
 	return iter;
 }
 
-void* linked_list_value_at(LinkedList* this, size_t index)
-{
+void* linked_list_value_at(LinkedList* this, size_t index) {
 	return linked_list_at(this, index)->value;
 }
