@@ -42,7 +42,8 @@ void shape_draw_properties_window(Shape* this) {
 }
 
 void shape_plot(Shape* this, bool is_selected) {
-	if (ImPlot_BeginItem(this->validated_label.data, ImPlotItemFlags_None, -1)) {
+	ImPlot_SetNextErrorBarStyle(this->color, -1, -1); // not sure if there's a better way to set color in the legend, but we don't use error bars for anyway
+	if (ImPlot_BeginItem(this->validated_label.data, ImPlotItemFlags_None, ImPlotCol_ErrorBar)) {
 		this->vtable->on_plot(this, is_selected);
 		ImPlot_EndItem();
 	}

@@ -8,9 +8,17 @@
 #include <stb_image.h>
 #include "shapes/shape.h"
 #include "shapes/line.h"
+#include "shapes/circle.h"
 #include "resource_management/ico_file.h"
 #include <float.h>
 #include <debugmalloc.h>
+
+enum ShapeType {
+	ShapeType_Line,
+	ShapeType_Circle,
+	ShapeType_Parabola,
+	ShapeType_Hyperbola
+};
 
 void _initialize_imgui_io_config(MainWindow* this) {
 	ImGuiIO* const io = &this->base.imgui_context->IO;
@@ -149,7 +157,7 @@ void _draw_about_window(MainWindow* this) {
 	const char* build_config = "Release";
 #endif
 	igText("Build: %s - %s", build_config, __TIMESTAMP__);
-	igTextLinkOpenURL("Source code", ""); // TODO
+	igTextLinkOpenURL("Source code", "https://github.com/Zsongli/plane-lab");
 
 	igEnd();
 }
@@ -180,8 +188,8 @@ void _draw_menu_bar(MainWindow* this) {
 		igEndMenu();
 	}
 	if (igBeginMenu("Edit", true)) {
-		if (igMenuItem_Bool("Deselect", "Esc", false, !this->selected_shape)) this->selected_shape = NULL;
-		if (igMenuItem_Bool("Delete selected", "Del", false, !this->selected_shape)) {
+		if (igMenuItem_Bool("Deselect", "Esc", false, this->selected_shape)) this->selected_shape = NULL;
+		if (igMenuItem_Bool("Delete selected", "Del", false, this->selected_shape)) {
 			_remove_shape(this, this->selected_shape);
 			this->selected_shape = NULL;
 		}
@@ -252,7 +260,7 @@ void _draw_graph_window(MainWindow* this) {
 			Shape* shape = iter->value;
 			iter = iter->next;
 			igPushID_Ptr(shape);
-			shape_plot(shape, false);
+			shape_plot(shape, shape == this->selected_shape);
 			igPopID();
 		}
 		ImPlot_EndPlot();
@@ -274,7 +282,6 @@ void _draw_selector_window(MainWindow* this) {
 
 	ImVec2 rgn_avail = igGetContentRegionAvail();
 	ImVec2 add_button_size = igCalcTextSize("Add new", NULL, false, 0.0f);
-	add_button_size.y += (style->FramePadding.y + style->FrameBorderSize) * 2.0f;
 
 	igPushStyleVar_Vec2(ImGuiStyleVar_CellPadding, (ImVec2) { 0.0f, 0.0f });
 
@@ -326,11 +333,28 @@ void _draw_selector_window(MainWindow* this) {
 
 		igEndTable();
 	}
-	if (igButton("Add new", (ImVec2) { rgn_avail.x, add_button_size.y })) {
-		Line* _line = malloc(sizeof(Line));
-		line_new(_line, "New Line", (ImVec4) { 0, 0, 0, 1 }, (DVec2) { -1, -1 }, (DVec2) { 1, 1 });
-		linked_list_push_back(&this->shapes, _line);
+	if (igBeginMenu("Add new", true)) {
+		if (igMenuItem_Bool("Line", NULL, false, true)) {
+			Line* _line = malloc(sizeof(Line));
+			line_new(_line, "New Line", (ImVec4) { 0, 0, 0, 1 }, (DVec2) { -1, -1 }, (DVec2) { 1, 1 });
+			linked_list_push_back(&this->shapes, _line);
+		}
+		else if (igMenuItem_Bool("Circle", NULL, false, true)) {
+			Circle* _circle = malloc(sizeof(Circle));
+			circle_new(_circle, "New Circle", (ImVec4) { 0, 0, 0, 1 }, (DVec2) { 0, 0 }, 1.0);
+			linked_list_push_back(&this->shapes, _circle);
+		}
+		igEndMenu();
 	}
+	//if (igButton("Add new", (ImVec2) { rgn_avail.x, add_button_size.y })) {
+	//	//igOpenPopup_Str("AddShapePopup", ImGuiPopupFlags_None);
+	//	/*Line* _line = malloc(sizeof(Line));
+	//	line_new(_line, "New Line", (ImVec4) { 0, 0, 0, 1 }, (DVec2) { -1, -1 }, (DVec2) { 1, 1 });
+	//	linked_list_push_back(&this->shapes, _line);*/
+	//	Circle* _circle = malloc(sizeof(Circle));
+	//	circle_new(_circle, "New Circle", (ImVec4) { 0, 0, 0, 1 }, (DVec2) { 0, 0 }, 1.0);
+	//	linked_list_push_back(&this->shapes, _circle);
+	//}
 	igEnd();
 }
 

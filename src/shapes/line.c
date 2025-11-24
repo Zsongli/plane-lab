@@ -13,8 +13,8 @@ void line_on_draw_properties_window(void* _this) {
 	this->p1 = this->validated_p1;
 	this->p2 = this->validated_p2;
 
-	bool p1_changed = igDragScalarN("Point 1", ImGuiDataType_Double, &this->p1.x, 2, 0.001f, NULL, NULL, "%.3lf", ImGuiSliderFlags_None);
-	igDragScalarN("Point 2", ImGuiDataType_Double, &this->p2.x, 2, 0.001f, NULL, NULL, "%.3lf", ImGuiSliderFlags_None);
+	bool p1_changed = igDragScalarN("Point 1", ImGuiDataType_Double, &this->p1, 2, 0.001f, NULL, NULL, "%.3lf", ImGuiSliderFlags_None);
+	bool p2_changed = igDragScalarN("Point 2", ImGuiDataType_Double, &this->p2, 2, 0.001f, NULL, NULL, "%.3lf", ImGuiSliderFlags_None);
 
 	bool used_text_input = igGetIO_Nil()->WantTextInput;
 
@@ -29,7 +29,7 @@ void line_on_draw_properties_window(void* _this) {
 			if (this->validated_p1.x > this->p1.x) this->validated_p1.x = this->p1.x - 0.002f;
 			else this->validated_p1.x = this->p1.x + 0.002f;
 		}
-		else {
+		if (p2_changed) {
 			if (this->validated_p2.x > this->p2.x) this->validated_p2.x = this->p2.x - 0.002f;
 			else this->validated_p2.x = this->p2.x + 0.002f;
 		}
