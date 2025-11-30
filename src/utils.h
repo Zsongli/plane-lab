@@ -2,4 +2,4 @@
 
 #define DISCARD(x) ((void)(x))
 
-const char* filename(const char* path);
+char* filename(char* path);

@@ -15,6 +15,6 @@ void graph_delete(Graph* this);
 bool graph_add_default_shape(Graph* this, ShapeType type);
 void graph_remove_shape(Graph* this, Shape* shape);
 bool graph_serialize(Graph* this, Buffer* out_data);
-bool graph_save_to_file(Graph* this, const char* path);
-bool graph_load_from_file(Graph* this, const char* path);
+bool graph_save_to_file(Graph* this, char* path);
+bool graph_load_from_file(Graph* this, char* path);
 void graph_plot_shapes(Graph* this);

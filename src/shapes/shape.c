@@ -5,6 +5,7 @@
 #include <debugmalloc.h>
 #include <cimplot.h>
 #include <imgui_macros.h>
+#include <math.h>
 
 int label_resize_callback(ImGuiInputTextCallbackData* data) {
 	if (data->EventFlag != ImGuiInputTextFlags_CallbackResize) return 0;
@@ -109,7 +110,7 @@ ShapeVTable shape_default_vtable = {
 	.serialize = shape_serialize
 };
 
-bool shape_new(Shape* this, const char* initial_label, ImVec4 color) {
+bool shape_new(Shape* this, char* initial_label, ImVec4 color) {
 	this->vtable = &shape_default_vtable;
 	this->color = color;
 

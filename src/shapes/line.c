@@ -143,7 +143,7 @@ bool line_deserialize(Line* this, Buffer* in_data) {
 	return true;
 }
 
-bool line_new(Line* this, const char* initial_label, ImVec4 initial_color, ImPlotPoint p1, ImPlotPoint p2) {
+bool line_new(Line* this, char* initial_label, ImVec4 initial_color, ImPlotPoint p1, ImPlotPoint p2) {
 	if (!shape_new(&this->base, initial_label, initial_color)) return false;
 	this->base.vtable = &line_default_vtable;
 	this->p1 = p1;

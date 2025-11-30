@@ -19,4 +19,4 @@ bool graph_window_new(GraphWindow* this);
 void graph_window_delete(GraphWindow* this);
 void graph_window_draw(GraphWindow* this);
 void graph_window_setup_docking_layout(GraphWindow* this);
-bool graph_window_load_from_file(GraphWindow* this, const char* path);
+bool graph_window_load_from_file(GraphWindow* this, char* path);

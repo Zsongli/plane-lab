@@ -7,14 +7,14 @@
 #include "hyperbola.h"
 #include <debugmalloc.h>
 
-static const char* shape_type_strings[ShapeType_Count] = {
+static char* shape_type_strings[ShapeType_Count] = {
 	"Line",
 	"Circle",
 	"Parabola",
 	"Hyperbola"
 };
 
-const char* shape_type_to_string(ShapeType shape_type) {
+char* shape_type_to_string(ShapeType shape_type) {
 	assert(shape_type >= 0 && shape_type < ShapeType_Count);
 #pragma warning(suppress : 33010) // msvc doesn't know that assert never returns
 	return shape_type_strings[shape_type];
@@ -58,7 +58,7 @@ const struct {
 // caller must free the returned shape
 bool shape_new_default_from_type(ShapeType shape_type, Buffer* out_data) {
 	assert(shape_type >= 0 && shape_type < ShapeType_Count);
-	const char* label = shape_type_to_string(shape_type);
+	char* label = shape_type_to_string(shape_type);
 
 	switch (shape_type) {
 	case ShapeType_Line: {

@@ -11,7 +11,7 @@ ShapeVTable hyperbola_default_vtable = {
 	.delete = shape_delete
 };
 
-bool hyperbola_new(Hyperbola* this, const char* initial_label, ImVec4 initial_color, ImPlotPoint center, ImPlotPoint stretch) {
+bool hyperbola_new(Hyperbola* this, char* initial_label, ImVec4 initial_color, ImPlotPoint center, ImPlotPoint stretch) {
 	if (!shape_new(&this->base, initial_label, initial_color)) return false;
 	this->base.vtable = &hyperbola_default_vtable;
 
@@ -135,19 +135,19 @@ void hyperbola_on_plot(void* _this, bool is_selected) {
 
 	ImVec2* right_lower_points_array = (ImVec2*)right_lower_points.data;
 	size_t right_lower_points_count = right_lower_points.size / sizeof(ImVec2);
-	assert(right_lower_points_count < INT_MAX);
+	assert(right_lower_points_count <= INT_MAX);
 
 	ImVec2* right_upper_points_array = (ImVec2*)right_upper_points.data;
 	size_t right_upper_points_count = right_upper_points.size / sizeof(ImVec2);
-	assert(right_upper_points_count < INT_MAX);
+	assert(right_upper_points_count <= INT_MAX);
 
 	ImVec2* left_lower_points_array = (ImVec2*)left_lower_points.data;
 	size_t left_lower_points_count = left_lower_points.size / sizeof(ImVec2);
-	assert(left_lower_points_count < INT_MAX);
+	assert(left_lower_points_count <= INT_MAX);
 
 	ImVec2* left_upper_points_array = (ImVec2*)left_upper_points.data;
 	size_t left_upper_points_count = left_upper_points.size / sizeof(ImVec2);
-	assert(left_upper_points_count < INT_MAX);
+	assert(left_upper_points_count <= INT_MAX);
 
 	// draw approximation lines
 	ImDrawList_AddPolyline(ImPlot_GetPlotDrawList(),
@@ -181,7 +181,7 @@ void hyperbola_on_plot(void* _this, bool is_selected) {
 		false,
 		2.0f
 	);
-
+	
 	buffer_delete(&left_lower_points);
 fail_left_lower_points:
 	buffer_delete(&left_upper_points);

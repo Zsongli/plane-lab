@@ -1,10 +1,12 @@
 #include "texture.h"
 #include <stb_image.h>
+#include <assert.h>
 
 bool texture_new_from_encoded(Texture* this, const unsigned char* png_data, size_t png_size) {
+	assert(png_size <= INT_MAX);
 	unsigned char* pixels = stbi_load_from_memory(
 		png_data,
-		png_size,
+		(int)png_size,
 		&this->width,
 		&this->height,
 		NULL,

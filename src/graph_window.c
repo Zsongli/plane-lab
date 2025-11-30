@@ -7,7 +7,7 @@
 #include <nfd.h>
 #include <debugmalloc.h>
 
-bool _graph_window_generate_unique_window_name(const char* label, const char* separator, void* id, String* out_window_id) {
+bool _graph_window_generate_unique_window_name(char* label, char* separator, void* id, String* out_window_id) {
 	string_new(out_window_id, label);
 	string_append(out_window_id, separator);
 	char ptr[32];
@@ -18,7 +18,7 @@ bool _graph_window_generate_unique_window_name(const char* label, const char* se
 
 #undef free // debugmalloc is too stupid to handle this case
 bool _graph_window_save_as(GraphWindow* this) {
-	const Graph* graph = &this->graph;
+	Graph* graph = &this->graph;
 
 	nfdchar_t* save_path;
 	if (NFD_SaveDialog("plab", NULL, &save_path) != NFD_OKAY) return false;
@@ -38,14 +38,14 @@ fail:
 #define free(P) debugmalloc_free_full((P), "free", __FILE__, __LINE__)
 
 bool _graph_window_save(GraphWindow* this) {
-	const Graph* graph = &this->graph;
+	Graph* graph = &this->graph;
 	if (graph->working_file.size > 0)
 		return graph_save_to_file(graph, graph->working_file.data);
 
 	return _graph_window_save_as(this);
 }
 
-bool graph_window_load_from_file(GraphWindow* this, const char* path) {
+bool graph_window_load_from_file(GraphWindow* this, char* path) {
 	if (!graph_load_from_file(&this->graph, path)) return false;
 	
 	string_delete(&this->window_name);
@@ -184,7 +184,7 @@ void _graph_window_draw_selector(GraphWindow* this) {
 	igEnd();
 }
 
-void _graph_window_draw_shell(GraphWindow* this, const char* label) {
+void _graph_window_draw_shell(GraphWindow* this, char* label) {
 
 	igPushFont(NULL, 28.0f);
 	ImVec2 text_size = igCalcTextSize(label, NULL, false, 0.0f);

@@ -10,7 +10,7 @@ ShapeVTable parabola_default_vtable = {
 	.delete = shape_delete
 };
 
-bool parabola_new(Parabola* this, const char* initial_label, ImVec4 initial_color, ImPlotPoint vertex, double scalar) {
+bool parabola_new(Parabola* this, char* initial_label, ImVec4 initial_color, ImPlotPoint vertex, double scalar) {
 	if (!shape_new(&this->base, initial_label, initial_color)) return false;
 	this->base.vtable = &parabola_default_vtable;
 

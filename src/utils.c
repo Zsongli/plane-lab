@@ -1,7 +1,7 @@
 #include "utils.h"
 #include <string.h>
 
-const char* filename(const char* path) {
+char* filename(char* path) {
 	char* last_slash = strrchr(path, '/');
 	char* last_backslash = strrchr(path, '\\');
 	if (last_slash) return last_slash + 1;

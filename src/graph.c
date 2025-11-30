@@ -64,7 +64,7 @@ bool graph_serialize(Graph* this, Buffer* out_data) {
 		.version = FILE_VERSION,
 		.shape_count = linked_list_count(&this->shapes)
 	};
-	strncpy(header.magic, HEADER_MAGIC, IM_ARRAYSIZE(HEADER_MAGIC) - 1);
+	strncpy_s(header.magic, IM_ARRAYSIZE(HEADER_MAGIC) - 1, HEADER_MAGIC, IM_ARRAYSIZE(HEADER_MAGIC) - 1);
 
 	if (!buffer_push_back(out_data, &header, sizeof(SerializedGraphHeader))) return false;
 
@@ -85,7 +85,7 @@ bool graph_serialize(Graph* this, Buffer* out_data) {
 	return true;
 }
 
-bool graph_save_to_file(Graph* this, const char* path) {
+bool graph_save_to_file(Graph* this, char* path) {
 	FILE* f = fopen(path, "wb");
 	if (!f) return false;
 
@@ -114,7 +114,7 @@ bool graph_deserialize(Graph* this, Buffer* in_data) {
 	SerializedGraphHeader header;
 	if (!buffer_consume(in_data, sizeof(SerializedGraphHeader), &header)) return false;
 
-	if (strncmp((const char*)header.magic, (const char*)HEADER_MAGIC, IM_ARRAYSIZE(HEADER_MAGIC) - 1) != 0) return false;
+	if (strncmp((char*)header.magic, (char*)HEADER_MAGIC, IM_ARRAYSIZE(HEADER_MAGIC) - 1) != 0) return false;
 	if (header.version != FILE_VERSION) return false;
 
 	for (size_t i = 0; i < header.shape_count; i++) {
@@ -147,7 +147,7 @@ bool graph_deserialize(Graph* this, Buffer* in_data) {
 	return true;
 }
 
-bool graph_load_from_file(Graph* this, const char* path) {
+bool graph_load_from_file(Graph* this, char* path) {
 	FILE* f = fopen(path, "rb");
 	if (!f) return false;
 

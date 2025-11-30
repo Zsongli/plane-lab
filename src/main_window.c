@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include "resource_management/ico_file.h"
 #include <float.h>
+#include <math.h>
+#include <assert.h>
 #include <nfd.h>
 #include <stb_image.h>
 #include <debugmalloc.h>
@@ -118,7 +120,7 @@ void _main_window_draw_about_window(MainWindow* this) {
 	igEnd();
 }
 
-bool _main_window_add_graph_window(MainWindow* this, const char* path) {
+bool _main_window_add_graph_window(MainWindow* this, char* path) {
 	GraphWindow* new_window = malloc(sizeof(GraphWindow));
 
 	if (!graph_window_new(new_window)) goto fail_new_window;
@@ -134,7 +136,9 @@ fail_new_window:
 	return false;
 }
 
-#undef free
+#if _DEBUG
+#undef free // debugmalloc is too stupid to handle this case
+#endif
 bool _main_window_load_graph_window_from_file(MainWindow* this) {
 	nfdchar_t* path = NULL;
 	if (NFD_OpenDialog("plab", NULL, &path) != NFD_OKAY) return false;
@@ -142,7 +146,9 @@ bool _main_window_load_graph_window_from_file(MainWindow* this) {
 	free(path);
 	return result;
 }
+#if _DEBUG
 #define free(P) debugmalloc_free_full((P), "free", __FILE__, __LINE__)
+#endif
 
 
 void _main_window_draw_menu_bar(MainWindow* this) {
@@ -248,14 +254,16 @@ void main_window_on_imgui_draw(void* _this) {
 	LinkedListNode* iter = this->graph_windows.head;
 	while (iter != NULL) {
 		GraphWindow* graph_window = iter->value;
+		assert(graph_window != NULL);
+
 		iter = iter->next;
 
 		if (graph_window->should_close) {
-			graph_window_delete(graph_window);
-			free(graph_window);
-
 			if (graph_window == this->graph_windows.head->value) linked_list_remove_head(&this->graph_windows);
 			else linked_list_remove_after(linked_list_find_preceding(&this->graph_windows, graph_window));
+
+			graph_window_delete(graph_window);
+			free(graph_window);
 
 			continue;
 		}

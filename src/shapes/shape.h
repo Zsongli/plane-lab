@@ -18,7 +18,7 @@ typedef struct {
 	ImVec4 color;
 } Shape;
 
-bool shape_new(Shape* this, const char* label, ImVec4 color);
+bool shape_new(Shape* this, char* label, ImVec4 color);
 void shape_delete(Shape* this);
 void shape_draw_properties_window(Shape* this);
 void shape_on_draw_properties_window(void* this);

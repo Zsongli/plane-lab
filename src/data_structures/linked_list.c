@@ -52,7 +52,7 @@ LinkedListNode* linked_list_at(LinkedList* this, size_t index) {
 		if (current_index == index) return iter;
 		current_index++;
 	}
-	assert(false && "index out of bounds");
+	return NULL;
 }
 
 void* linked_list_value_at(LinkedList* this, size_t index) {

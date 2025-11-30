@@ -14,7 +14,7 @@ ShapeVTable circle_default_vtable = {
 	.serialize = circle_serialize
 };
 
-bool circle_new(Circle* this, const char* initial_label, ImVec4 initial_color, ImPlotPoint center, double radius) {
+bool circle_new(Circle* this, char* initial_label, ImVec4 initial_color, ImPlotPoint center, double radius) {
 	if (!shape_new(&this->base, initial_label, initial_color)) return false;
 	this->base.vtable = &circle_default_vtable;
 
