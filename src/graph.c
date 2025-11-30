@@ -64,7 +64,7 @@ bool graph_serialize(Graph* this, Buffer* out_data) {
 		.version = FILE_VERSION,
 		.shape_count = linked_list_count(&this->shapes)
 	};
-	strncpy_s(header.magic, IM_ARRAYSIZE(HEADER_MAGIC) - 1, HEADER_MAGIC, IM_ARRAYSIZE(HEADER_MAGIC) - 1);
+	memcpy(header.magic, HEADER_MAGIC, sizeof(HEADER_MAGIC) - 1);
 
 	if (!buffer_push_back(out_data, &header, sizeof(SerializedGraphHeader))) return false;
 
