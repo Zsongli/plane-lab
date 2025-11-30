@@ -1,13 +1,18 @@
 #include <GLFW/glfw3.h>
 #include "utils.h"
 #include "main_window.h"
-#include "data_structures/dynamic_string.h"
+#include <debugmalloc.h>
 
-#define INITIAL_WINDOW_WIDTH 800
-#define INITIAL_WINDOW_HEIGHT 600
+static const size_t INITIAL_WINDOW_WIDTH = 800;
+static const size_t INITIAL_WINDOW_HEIGHT = 600;
 
 int main(int argc, char** argv) {
 	DISCARD(argc); DISCARD(argv);
+
+#if _DEBUG
+	// can't load large enough files with debugmalloc's default limit
+	debugmalloc_max_block_size(1024 * 1024 * 1024); // 1 GB
+#endif
 
 	if (!glfwInit()) {
 		perror("Failed to initialize GLFW\n");

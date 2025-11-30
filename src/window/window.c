@@ -1,6 +1,7 @@
 #include "window.h"
 #include "../utils.h"
 #include <stdlib.h>
+#include <assert.h>
 
 void window_on_draw(void* this) {
 	DISCARD(this);
@@ -18,10 +19,11 @@ WindowVTable window_default_vtable = {
 	.delete = window_delete
 };
 
-bool window_new(Window* this, int width, int height, const char* title) {
+bool window_new(Window* this, size_t width, size_t height, const char* title) {
 	this->vtable = &window_default_vtable;
 	
-	this->glfw_window = glfwCreateWindow(width, height, title, NULL, NULL);
+	assert(width <= INT_MAX && height <= INT_MAX);
+	this->glfw_window = glfwCreateWindow((int)width, (int)height, title, NULL, NULL);
 	if (!this->glfw_window) {
 		perror("Failed to create GLFW window\n");
 		return false;

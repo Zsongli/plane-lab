@@ -14,7 +14,7 @@ typedef struct {
 	GLFWwindow* glfw_window;
 } Window;
 
-bool window_new(Window* this, int width, int height, const char* title);
+bool window_new(Window* this, size_t width, size_t height, const char* title);
 void window_run_main_loop(Window* this);
 void window_delete(void* this);
 

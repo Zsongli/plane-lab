@@ -1,13 +1,17 @@
 #pragma once
 #include "shape.h"
+#include <cimplot.h>
 
 typedef struct {
 	Shape base;
-	DVec2 center;
+	ImPlotPoint center;
 	double radius;
-	double validated_radius;
+	ImPlotPoint radius_tool_pos;
+
 } Circle;
 
-bool circle_new(Circle* this, const char* initial_label, ImVec4 initial_color, DVec2 center, double radius);
+bool circle_new(Circle* this, const char* initial_label, ImVec4 initial_color, ImPlotPoint center, double radius);
 void circle_on_draw_properties_window(void* this);
 void circle_on_plot(void* this, bool is_selected);
+bool circle_serialize(void* this, Buffer* out_data);
+bool circle_deserialize(Circle* this, Buffer* in_data);

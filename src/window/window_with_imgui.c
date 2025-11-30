@@ -59,7 +59,7 @@ WindowWithImGuiVTable window_with_imgui_default_vtable = {
 	.on_imgui_draw = window_with_imgui_on_imgui_draw,
 };
 
-bool window_with_imgui_new(WindowWithImGui* this, int width, int height, const char* title) {
+bool window_with_imgui_new(WindowWithImGui* this, size_t width, size_t height, const char* title) {
 
 	if (!window_new(&this->base, width, height, title)) {
 		perror("Failed to create base window\n");

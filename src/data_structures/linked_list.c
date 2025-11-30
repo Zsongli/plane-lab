@@ -4,8 +4,6 @@
 
 void linked_list_new(LinkedList* this) {
 	this->head = NULL;
-	this->tail = NULL;
-	this->count = 0;
 }
 
 void linked_list_delete(LinkedList* this) {
@@ -17,60 +15,70 @@ void linked_list_delete(LinkedList* this) {
 	}
 }
 
-void linked_list_push_back(LinkedList* this, void* value) {
+bool linked_list_push_back(LinkedList* this, void* value) {
 	LinkedListNode* node = (LinkedListNode*)malloc(sizeof(LinkedListNode));
-	if (!node) return;
+	if (!node) return false;
 
-	node->value = value;
-	node->next = NULL;
+	*node = (LinkedListNode){
+		.value = value,
+		.next = NULL
+	};
 
-	if (this->tail) this->tail->next = node;
-	else this->head = node;
-	this->tail = node;
-	this->count++;
+	if (!this->head) {
+		this->head = node;
+		return true;
+	}
+
+	LinkedListNode* tail = this->head;
+	while (tail->next) tail = tail->next;
+
+	tail->next = node;
+	return true;
 }
 
-void linked_list_remove_at(LinkedList* this, size_t index) {
-	if (index == 0) {
-		LinkedListNode* to_remove = this->head;
-		this->head = to_remove->next;
-		if (this->tail == to_remove) this->tail = NULL;
-		free(to_remove);
-	}
-	else {
-		LinkedListNode* prev = linked_list_at(this, index - 1);
-		assert(prev != NULL && "attempted to remove element in empty list");
-
-		LinkedListNode* to_remove = prev->next;
-		assert(to_remove != NULL && "attempted to remove element out of bounds");
-
-		prev->next = to_remove->next;
-		if (this->tail == to_remove) this->tail = prev;
-		free(to_remove);
-	}
-	this->count--;
-}
-
-void linked_list_remove_after(LinkedList* this, LinkedListNode* node) {
-	assert(node != NULL && "give me something");
+void linked_list_remove_after(LinkedListNode* node) {
+	assert(node != NULL && "give me something"); // https://youtu.be/ASrCKnoViMI?t=18
 
 	LinkedListNode* to_remove = node->next;
 	assert(to_remove != NULL && "attempted to remove element out of bounds");
+
 	node->next = to_remove->next;
-	if (this->tail == to_remove) this->tail = node;
 	free(to_remove);
-	this->count--;
 }
 
 LinkedListNode* linked_list_at(LinkedList* this, size_t index) {
-	LinkedListNode* iter = this->head;
-	for (size_t i = 0; i < index; i++) {
-		if (!iter) return NULL;
-		iter = iter->next;
+	size_t current_index = 0;
+	for (LinkedListNode* iter = this->head; iter != NULL; iter = iter->next) {
+		if (current_index == index) return iter;
+		current_index++;
 	}
-	return iter;
+	assert(false && "index out of bounds");
 }
 
 void* linked_list_value_at(LinkedList* this, size_t index) {
 	return linked_list_at(this, index)->value;
+}
+
+size_t linked_list_count(LinkedList* this) {
+	size_t length = 0;
+	for (LinkedListNode* iter = this->head; iter != NULL; iter = iter->next)
+		length++;
+	return length;
+}
+
+void linked_list_remove_head(LinkedList* this) {
+	LinkedListNode* new_head = this->head->next;
+	free(this->head);
+	this->head = new_head;
+}
+
+LinkedListNode* linked_list_find_preceding(LinkedList* this, void* value) {
+	LinkedListNode* iter = this->head;
+	while (iter->next && iter->next->value != value) iter = iter->next;
+	if (!iter->next) return NULL;
+	return iter;
+}
+
+LinkedListNode* linked_list_find(LinkedList* this, void* value) {
+	return linked_list_find_preceding(this, value)->next;
 }

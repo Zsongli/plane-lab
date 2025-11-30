@@ -17,7 +17,7 @@ typedef struct {
 	ImPlotContext* implot_context;
 } WindowWithImGui;
 
-bool window_with_imgui_new(WindowWithImGui* this, int width, int height, const char* title);
+bool window_with_imgui_new(WindowWithImGui* this, size_t width, size_t height, const char* title);
 void window_with_imgui_delete(void* this);
 
 void window_with_imgui_on_draw(void* this);

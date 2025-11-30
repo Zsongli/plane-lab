@@ -4,42 +4,45 @@
 #include <debugmalloc.h>
 
 bool string_new(String* this, const char* value) {
+	if (!value) {
+		if (!buffer_new(this, 0)) return false;
+		return true;
+	}
+
 	size_t len = strlen(value);
-	this->capacity =  len + 1;
-
-	this->data = strdup(value);
-	if (!this->data) return false;
-
+	
+	if (!buffer_new(this, len + 1)) return false;
+	if (!buffer_push_back(this, value, len + 1)) return false;
+	
 	return true;
 }
 
 void string_delete(String* this) {
-	free(this->data);
+	buffer_delete(this);
 }
 
 bool string_set(String* this, const char* value) {
 	size_t len = strlen(value);
-	
-	if (len + 1 > this->capacity) {
-		char* new_data = realloc(this->data, len + 1);
-		if (!new_data) return false;
-		this->data = new_data;
-		this->capacity = len + 1;
-	}
-	
-	strcpy_s(this->data, this->capacity, value);
-	
+
+	if(!buffer_reserve(this, len + 1)) return false;
+
+	if (strcpy_s(this->data, this->capacity, value) != 0) return false;
+	this->size = len + 1;
 	return true;
 }
 
-bool string_resize(String* this, size_t new_capacity) {
-	if (new_capacity <= this->capacity) return true;
-	
-	char* new_data = realloc(this->data, new_capacity);
-	if (!new_data) return false;
-	
-	this->data = new_data;
-	this->capacity = new_capacity;
-	
+bool string_reserve(String* this, size_t new_capacity) {
+	return buffer_reserve(this, new_capacity);
+}
+
+bool string_append(String* this, const char* value) {
+	size_t len = strlen(value);
+	size_t new_size = this->size + len;
+	if (!buffer_reserve(this, new_size)) return false;
+
+	if (strcpy_s((char*)this->data + this->size - 1, this->capacity - (this->size - 1), value) != 0) return false;
+	this->size = new_size;
+
 	return true;
 }
+
