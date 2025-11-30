@@ -3,7 +3,7 @@
 A simple C application for graphing geometric shapes using ImGui. Made for a university assignment.
 
 ## Preview
-![TODO]()
+![Using the program](./assets/planelab_preview.gif)
 
 ## Features
 - Interactive graphing of geometric shapes
@@ -22,7 +22,7 @@ A simple C application for graphing geometric shapes using ImGui. Made for a uni
 2. Run the executable file.
 
 ### User documentation
-   [TODO]()
+[Hungarian](./assets/user_documentation_hu.md)
 
 ## Building and development
 
@@ -38,7 +38,7 @@ A simple C application for graphing geometric shapes using ImGui. Made for a uni
 - [nativefiledialog](https://github.com/mlabbe/nativefiledialog) (included as a submodule)
 
 ### Instructions
-1. Clone the repository
+1. Clone the repository recursively
 2. Navigate to the project directory and run:
    ```sh
    premake5 vs2022
@@ -50,7 +50,7 @@ A simple C application for graphing geometric shapes using ImGui. Made for a uni
 3. Open the generated solution or Makefile in your preferred IDE and build the project.
 
 ### Developer documentation
-   [TODO]()
+[Hungarian](./assets/developer_documentation_hu.md)
 
 ## License
 This project is licensed under the MIT License. See the LICENSE file for details.
